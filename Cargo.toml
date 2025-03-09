@@ -14,3 +14,6 @@ path = "src/lib.rs"
 [[bin]]
 path = "src/main.rs"
 name = "zero2pro"
+
+[dev-dependencies]
+reqwest = "0.12.12"
