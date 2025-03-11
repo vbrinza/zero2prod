@@ -33,4 +33,4 @@ path = "src/main.rs"
 name = "zero2pro"
 
 [dev-dependencies]
-reqwest = "0.12.12"
+reqwest = "0.12.13"
