@@ -4,14 +4,16 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+config = "0.15.11"
 actix-web = "4.10.2"
 serde = { version = "1.0.219", features = ["derive"]}
 sqlx-cli = { version = "0.8.3", default-features=false, features = [
     "rustls",
     "postgres"
 ]}
-tokio = { version = "1.44.0", features = ["macros", "rt-multi-thread"]}
-
+tokio = { version = "1.44.1", features = ["macros", "rt-multi-thread"]}
+uuid = { version = "1.16.0", features = ["v4"]}
+chrono = { version = "0.4.40", default-features = false, features = ["clock"]}
 [dependencies.sqlx]
 version = "0.8.3"
 default-features=false
@@ -33,4 +35,10 @@ path = "src/main.rs"
 name = "zero2pro"
 
 [dev-dependencies]
-reqwest = "0.12.13"
+reqwest = "0.12.14"
+
+
+[profile.dev]
+debug = 0
+strip = "debuginfo"
+
