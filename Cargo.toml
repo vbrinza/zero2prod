@@ -4,7 +4,8 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-secrecy = {version = "0.8.0", features = ["serde"]}
+tracing-actix-web = "0.7"
+secrecy = {version = "0.8.0", features = ["serde"]} # This one changed the interface in the newer versions so upgrading it will break the secrets functionality
 tracing = {version = "0.1", features = ["log"]}
 tracing-log = "0.2"
 tracing-subscriber = { version = "0.3", features = ["registry", "env-filter"]}
