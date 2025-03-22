@@ -1,4 +1,6 @@
 
+use secrecy::Secret;
+use secrecy::ExposeSecret;
 use zero2prod::configuration::{get_configuration, DatabaseSettings};
 use zero2prod::startup::run;
 use sqlx::{PgPool, PgConnection, Connection, Executor};
@@ -54,11 +56,11 @@ pub async fn configure_database(config: &DatabaseSettings) -> PgPool {
     let maintenance_settings = DatabaseSettings {
         database_name: "postgres".to_string(),
         username: "postgres".to_string(),
-        password: "password".to_string(),
+        password: Secret::new("password".to_string()),
         ..config.clone()
     };
     let mut connection = PgConnection::connect (
-            &maintenance_settings.connection_string()
+            &maintenance_settings.connection_string().expose_secret()
         )
         .await
         .expect("Failed to connect to Postgres");   
@@ -67,7 +69,7 @@ pub async fn configure_database(config: &DatabaseSettings) -> PgPool {
         .await
         .expect("Failed to create database.");
     
-    let connection_pool = PgPool::connect(&config.connection_string())
+    let connection_pool = PgPool::connect(&config.connection_string().expose_secret())
         .await
         .expect("Failed to connect to Postgres.");
     sqlx::migrate!("./migrations")

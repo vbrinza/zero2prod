@@ -4,6 +4,7 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+secrecy = {version = "0.8.0", features = ["serde"]}
 tracing = {version = "0.1", features = ["log"]}
 tracing-log = "0.2"
 tracing-subscriber = { version = "0.3", features = ["registry", "env-filter"]}
@@ -40,7 +41,7 @@ path = "src/main.rs"
 name = "zero2pro"
 
 [dev-dependencies]
-reqwest = "0.12.14"
+reqwest = "0.12.15"
 
 
 [profile.dev]
