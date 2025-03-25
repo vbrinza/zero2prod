@@ -10,7 +10,7 @@ tracing = {version = "0.1", features = ["log"]}
 tracing-log = "0.2"
 tracing-subscriber = { version = "0.3", features = ["registry", "env-filter"]}
 tracing-bunyan-formatter = "0.3"
-log = "0.4"
+log = "0.4.27"
 config = "0.15.11"
 actix-web = "4.10.2"
 serde = { version = "1.0.219", features = ["derive"]}
@@ -49,5 +49,5 @@ reqwest = "0.12.15"
 debug = 0
 strip = "debuginfo"
 
-# [profile.release]
-# opt-level = 3
+[profile.release]
+opt-level = 3
