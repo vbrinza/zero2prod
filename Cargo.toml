@@ -14,6 +14,7 @@ log = "0.4.27"
 config = "0.15.11"
 actix-web = "4.10.2"
 serde = { version = "1.0.219", features = ["derive"]}
+serde-aux = "4"
 sqlx-cli = { version = "0.8.3", default-features=false, features = [
     "rustls",
     "postgres"
