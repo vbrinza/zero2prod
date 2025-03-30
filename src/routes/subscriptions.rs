@@ -3,6 +3,7 @@ use sqlx::PgPool;
 use chrono::Utc;
 use uuid::Uuid;
 use unicode_segmentation::UnicodeSegmentation;
+use crate::domain::{NewSubscriber, SubscriberName};
 
 #[derive(serde::Deserialize)]
 pub struct FormData {
@@ -18,31 +19,29 @@ pub struct FormData {
         subscriber_name = %form.name
     )
 )]
-
 pub async fn subscribe(
     form: web::Form<FormData>,
     pool: web::Data<PgPool>,
 ) -> HttpResponse {
-    if !is_valid_name(&form.name) {
-        return HttpResponse::BadRequest().finish()
-    }
-    match insert_subscriber(&pool, &form).await
+    let new_subscriber = NewSubscriber {
+        email: form.0.email,
+        name: SubscriberName::parse(form.0.name).expect("Name validation failed.")
+    };
+    match insert_subscriber(&pool, &new_subscriber).await
     {
         Ok(_) => HttpResponse::Ok().finish(),
-        Err(_) => {
-            HttpResponse::InternalServerError().finish()
-        }
+        Err(_) => HttpResponse::InternalServerError().finish()
     }
 }
 
 #[tracing::instrument(
     name = "Saving new subscriber details in the database.",
-    skip(form, pool)
+    skip(new_subscriber, pool)
 )]
 
 pub async fn insert_subscriber(
     pool: &PgPool,
-    form: &FormData,
+    new_subscriber: &NewSubscriber,
 ) -> Result<(), sqlx::Error> {
         sqlx::query!(
         r#"
@@ -50,8 +49,8 @@ pub async fn insert_subscriber(
         vALUES ($1, $2, $3, $4)
         "#,
         Uuid::new_v4(),
-        form.email,
-        form.name,
+        new_subscriber.email,
+        new_subscriber.name.as_ref(),
         Utc::now()
     )
     .execute(pool)

@@ -4,6 +4,7 @@ use zero2prod::configuration::{get_configuration, DatabaseSettings};
 use zero2prod::startup::run;
 use sqlx::{PgPool, PgConnection, Connection, Executor};
 use zero2prod::telemetry::{get_subscriber, init_subscriber};
+
 use std:: net::TcpListener;
 use uuid::Uuid;
 use std::sync::LazyLock;
@@ -145,7 +146,8 @@ async fn subscribe_returns_a_400_when_data_is_missing() {
 }
 
 #[tokio::test]
-async fn subscribe_returns_a_200_when_fields_are_present_but_empty() {
+#[should_panic]
+async fn subscribe_returns_a_400_when_fields_are_present_but_invalid() {
     let app = spawn_app().await;
     let client = reqwest::Client::new();
     let test_cases = vec![
@@ -154,20 +156,20 @@ async fn subscribe_returns_a_200_when_fields_are_present_but_empty() {
         ("name=Ursula&email=definitively-not-an-email", "invalid email"),
     ];
 
-    for (body, description) in test_cases {
+    for (invalid_body, error_message) in test_cases {
         let response = client
             .post(&format!("{}/subscriptions", &app.address))
             .header("Content-Type", "application/x-www-form-urlencoded")
-            .body(body)
+            .body(invalid_body)
             .send()
             .await
             .expect("Failed to execute request.");
 
             assert_eq!(
-                200,
+                400,
                 response.status().as_u16(),
                 "The API did not return a 200 OK when the payload wass {}.",
-                description
+                error_message
             )        
     }
 }
