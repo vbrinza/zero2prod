@@ -47,7 +47,7 @@ name = "zero2prod"
 
 [dev-dependencies]
 reqwest = "0.12.15"
-
+fake = "4.2.0"
 
 [profile.dev]
 debug = 0
